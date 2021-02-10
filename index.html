@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Deploy a Remix Contract</title>
+
+    <link rel="stylesheet" type="text/css" href="main.css">
+
+    <script src="https://cdn.jsdelivr.net/gh/ethereum/web3.js/dist/web3.min.js"></script>
+</head>
+
+<body>
+<div>
+    <h1>Ethereum Secret Messenger</h1>
+    <hr>
+
+    <label>This site writes a secret message to the Ethereum
+        blockchain!</label>
+    <input id="userInput" type="text">
+
+    <button id="setMessageButton">Set secret message</button>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script>
+    window.ethereum.enable();
+    // Connect a the web3 provider
+    if (typeof web3 !== 'undefined') {
+        web3 = new Web3(web3.currentProvider);
+    } else {
+        web3 = new Web3(new Web3.providers.HttpProvider("HTTP://127.0.0.1:7545"));
+    }
+
+    // Set a default account
+    web3.eth.defaultAccount = web3.eth.accounts[0];
+
+    // Get the contract address
+    var RemixContract = new web3.eth.Contract([
+        {
+            "constant": false,
+            "inputs": [
+                {
+                    "name": "x",
+                    "type": "string"
+                }
+            ],
+            "name": "setMessage",
+            "outputs": [],
+            "payable": false,
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "constant": true,
+            "inputs": [],
+            "name": "getMessage",
+            "outputs": [
+                {
+                    "name": "",
+                    "type": "string"
+                }
+            ],
+            "payable": false,
+            "stateMutability": "view",
+            "type": "function"
+        }
+    ], '0x78b119e0dAa26EB1ea1D54276c0cBafC4E1a25da');
+
+    // Get the contract abi
+    var myMessage = RemixContract;
+
+    console.log(myMessage);
+
+
+    // $("#setMessageButton").click(function () {
+    //     myMessage.methods.setMessage($("#userInput").val()).send()
+    //     console.log($("#userInput").val())
+    // });
+
+    $("#setMessageButton").click(function () {
+
+        myMessage.methods.setMessage($("#userInput").val()).send({
+            from: '0x256A6BaD83EED37C7E439Bcc1Cf723b180f7270D',
+            gas: 4712388,
+            gasPrice: 10000000
+        }, (error, result) => {
+            if(result){message = result
+        console.log(message)}
+        else{
+            console.log("Error: " + error)
+            }})
+        console.log($("#userInput").val())
+    });
+</script>
+</body>
+
+</html>
+
+
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+<!--    <meta http-equiv="X-UA-Compatible" content="ie=edge">-->
+<!--    <title>Deploy a Remix Contract</title>-->
+
+<!--    <link rel="stylesheet" type="text/css" href="main.css">-->
+
+<!--    <script src="https://cdn.jsdelivr.net/gh/ethereum/web3.js@0.20.6/dist/web3.min.js"></script>-->
+<!--</head>-->
+
+<!--<body>-->
+<!--<div>-->
+<!--    <h1>Ethereum Secret Messenger</h1>-->
+<!--    <hr>-->
+
+<!--    <label for="message">This site writes a secret message to the Ethereum-->
+<!--        blockchain!</label>-->
+<!--    <input id="userInput" type="text">-->
+
+<!--    <button id="setMessageButton">Set secret message</button>-->
+<!--</div>-->
+
+<!--<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>-->
+
+<!--<script>-->
+
+<!--    // Connect a the web3 provider-->
+<!--    if (typeof web3 !== 'undefined') {-->
+<!--        web3 = new Web3(web3.currentProvider);-->
+<!--    } else {-->
+<!--        web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:7545"));-->
+<!--    }-->
+
+<!--    // Set a default account-->
+<!--    web3.eth.defaultAccount = web3.eth.accounts[0];-->
+
+<!--    // Get the contract address-->
+<!--    var RemixContract = web3.eth.contract([-->
+<!--        {-->
+<!--            "constant": false,-->
+<!--            "inputs": [-->
+<!--                {-->
+<!--                    "name": "x",-->
+<!--                    "type": "string"-->
+<!--                }-->
+<!--            ],-->
+<!--            "name": "setMessage",-->
+<!--            "outputs": [],-->
+<!--            "payable": false,-->
+<!--            "stateMutability": "nonpayable",-->
+<!--            "type": "function"-->
+<!--        },-->
+<!--        {-->
+<!--            "constant": true,-->
+<!--            "inputs": [],-->
+<!--            "name": "getMessage",-->
+<!--            "outputs": [-->
+<!--                {-->
+<!--                    "name": "",-->
+<!--                    "type": "string"-->
+<!--                }-->
+<!--            ],-->
+<!--            "payable": false,-->
+<!--            "stateMutability": "view",-->
+<!--            "type": "function"-->
+<!--        }-->
+<!--    ]);-->
+
+<!--    // Get the contract abi-->
+<!--    var myMessage = RemixContract.at('0x1aEB997045436119B6dE0c93De5FEeF4f274a187');-->
+
+<!--    console.log(myMessage);-->
+
+<!--    $("#setMessageButton").click(function () {-->
+<!--        myMessage.setMessage($("#userInput").val());-->
+<!--        console.log($("#userInput").val())-->
+<!--    });-->
+
+<!--</script>-->
+<!--</body>-->
+
+<!--</html>-->
